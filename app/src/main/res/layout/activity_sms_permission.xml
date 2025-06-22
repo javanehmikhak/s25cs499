@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SMS Permission screen using LinearLayout for vertical arrangement -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".SmsPermissionActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerVertical="true">
+
+        <!-- Explanation text for SMS permission request -->
+        <TextView
+            android:id="@+id/textSmsExplanation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:text="This app uses SMS to send notifications about event updates. Please grant permission to enable this feature."
+            android:textSize="16sp" />
+
+        <!-- Button to request SMS permission from user -->
+        <Button
+            android:id="@+id/buttonRequestPermission"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Request SMS Permission" />
+
+        <!-- Status text to display permission request result -->
+        <TextView
+            android:id="@+id/textPermissionResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textSize="18sp"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal" />
+
+        <!-- Button to manage/remove SMS permission -->
+        <Button
+            android:id="@+id/buttonManagePermission"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Manage/Remove Permission"
+            android:visibility="gone" />
+
+        <!-- Button to close the page -->
+        <Button
+            android:id="@+id/buttonDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="32dp"
+            android:text="Done" />
+
+    </LinearLayout>
+
+</RelativeLayout>

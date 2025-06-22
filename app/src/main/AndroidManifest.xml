@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Main application manifest file -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.eventtrackerapp_javaneharianamikhak">
+
+    <!-- Permission required for sending SMS notifications -->
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
+    <!-- Feature requirement for telephony functionality -->
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="true" />
+
+    <!-- Main application configuration -->
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="EventTrackerApp_JavanehArianaMikhak"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.EventTrackerApp_JavanehArianaMikhak">
+        
+        <!-- Activity for adding new events -->
+        <activity
+            android:name=".AddEventActivity"
+            android:exported="false" />
+            
+        <!-- Activity for handling SMS permissions -->
+        <activity
+            android:name=".SmsPermissionActivity"
+            android:exported="false" />
+            
+        <!-- Activity for displaying events overview -->
+        <activity
+            android:name=".EventsOverviewActivity"
+            android:exported="false" />
+            
+        <!-- Main activity (login screen) - set as launcher activity -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
