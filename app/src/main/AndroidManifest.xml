@@ -23,6 +23,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EventTrackerApp_JavanehArianaMikhak">
         
+        <!-- Activity for managing user profile (e.g., phone number) -->
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        
         <!-- Activity for adding new events -->
         <activity
             android:name=".AddEventActivity"

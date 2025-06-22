@@ -69,11 +69,18 @@ public class EventsOverviewActivity extends AppCompatActivity {
         eventAdapter = new EventAdapter(eventList,
             // 1. Delete Callback: Invoked when the "Delete" button is clicked for an event.
             event -> {
+                String eventName = event.getName(); // Get name before deleting
                 db.deleteEvent(event.getId());
                 refreshEvents(); // Refresh the list to show the event has been removed.
-                // Show a confirmation Toast if SMS permissions are enabled.
+
+                // Show a confirmation Toast and send SMS if permissions are enabled.
                 if (hasSmsPermission()) {
-                    Toast.makeText(EventsOverviewActivity.this, "Event deleted! SMS sent.", Toast.LENGTH_SHORT).show();
+                    String phoneNumber = db.getUserPhoneNumber(userId);
+                    String message = "Your event '" + eventName + "' has been deleted.";
+                    SmsSender.sendSms(phoneNumber, message);
+                    Toast.makeText(EventsOverviewActivity.this, "Event deleted! SMS notification sent.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(EventsOverviewActivity.this, "Event deleted successfully.", Toast.LENGTH_SHORT).show();
                 }
             },
             // 2. Edit Callback: Invoked when the "Edit" button is clicked for an event.
@@ -115,6 +122,12 @@ public class EventsOverviewActivity extends AppCompatActivity {
                 } else if (itemId == R.id.menu_sms_prefs) {
                     // Navigate to the SMS permission management screen.
                     Intent intent = new Intent(EventsOverviewActivity.this, SmsPermissionActivity.class);
+                    startActivity(intent);
+                    return true;
+                } else if (itemId == R.id.menu_profile) {
+                    // Navigate to the Profile screen to manage phone number.
+                    Intent intent = new Intent(EventsOverviewActivity.this, ProfileActivity.class);
+                    intent.putExtra("USER_ID", userId);
                     startActivity(intent);
                     return true;
                 }

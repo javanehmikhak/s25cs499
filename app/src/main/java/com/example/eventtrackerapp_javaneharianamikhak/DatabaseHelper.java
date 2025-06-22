@@ -18,15 +18,16 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
     // --- Database Constants ---
     private static final String DATABASE_NAME = "eventtracker.db";
-    private static final int DATABASE_VERSION = 1; // Increment to trigger onUpgrade
+    private static final int DATABASE_VERSION = 2; // Incremented to trigger onUpgrade
 
     // --- Table and Column Definitions ---
 
-    // Users table: Stores user credentials.
+    // Users table: Stores user credentials and contact info.
     public static final String TABLE_USERS = "users";
     public static final String COLUMN_USER_ID = "id"; // Primary Key
     public static final String COLUMN_USERNAME = "username"; // Must be unique
     public static final String COLUMN_PASSWORD = "password";
+    public static final String COLUMN_USER_PHONE = "phone"; // User's phone number for SMS
 
     // Events table: Stores event details, linked to a user.
     public static final String TABLE_EVENTS = "events";
@@ -54,7 +55,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_USERS + "(" +
                 COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 COLUMN_USERNAME + " TEXT UNIQUE," +
-                COLUMN_PASSWORD + " TEXT" + ")";
+                COLUMN_PASSWORD + " TEXT," +
+                COLUMN_USER_PHONE + " TEXT" + ")"; // Phone number is optional (TEXT)
         db.execSQL(CREATE_USERS_TABLE);
 
         // SQL statement to create the events table
@@ -130,6 +132,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return userId;
+    }
+
+    /**
+     * Retrieves a user's phone number based on their user ID.
+     * @param userId The user's ID.
+     * @return The phone number as a String, or null if not found or not set.
+     */
+    public String getUserPhoneNumber(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_USER_PHONE + " FROM " + TABLE_USERS + " WHERE " + COLUMN_USER_ID + "=?",
+                new String[]{String.valueOf(userId)});
+        String phoneNumber = null;
+        if (cursor.moveToFirst()) {
+            phoneNumber = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_PHONE));
+        }
+        cursor.close();
+        return phoneNumber;
+    }
+
+    /**
+     * Updates the phone number for a specific user.
+     * @param userId The ID of the user to update.
+     * @param phoneNumber The new phone number.
+     * @return true if the update was successful, false otherwise.
+     */
+    public boolean updateUserPhoneNumber(int userId, String phoneNumber) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USER_PHONE, phoneNumber);
+        int result = db.update(TABLE_USERS, values, COLUMN_USER_ID + "=?", new String[]{String.valueOf(userId)});
+        return result > 0;
     }
 
     // --- Event Management Methods ---

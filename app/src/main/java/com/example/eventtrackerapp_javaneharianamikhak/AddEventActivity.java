@@ -93,12 +93,24 @@ public class AddEventActivity extends AppCompatActivity {
             }
 
             if (success) {
-                // Show a confirmation toast if SMS permission is granted.
+                // If the database operation was successful, check for SMS permission.
                 if (hasSmsPermission()) {
-                    Toast.makeText(this, "Event database updated! SMS sent.", Toast.LENGTH_SHORT).show();
+                    String phoneNumber = db.getUserPhoneNumber(userId);
+                    String message;
+                    if (editMode) {
+                        message = "Your event '" + eventName + "' has been updated.";
+                    } else {
+                        message = "A new event '" + eventName + "' has been added to your calendar.";
+                    }
+                    // Send the SMS and show a confirmation toast.
+                    SmsSender.sendSms(phoneNumber, message);
+                    Toast.makeText(this, "Event saved! SMS notification sent.", Toast.LENGTH_SHORT).show();
+                } else {
+                    // If no SMS permission, just show a simple confirmation.
+                    Toast.makeText(this, "Event saved successfully.", Toast.LENGTH_SHORT).show();
                 }
-                setResult(RESULT_OK); // Signal to the previous activity that the data changed.
-                finish(); // Close this activity and return.
+                setResult(RESULT_OK); // Signal that the data was changed.
+                finish(); // Return to the previous screen.
             } else {
                 Toast.makeText(this, "Error saving event", Toast.LENGTH_SHORT).show();
             }
