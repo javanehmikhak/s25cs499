@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Events overview screen using RelativeLayout for flexible positioning -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Events Overview Screen - Material Design 3 Layout -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/eventsLayout"
     android:layout_width="match_parent"
@@ -8,48 +10,95 @@
     android:fitsSystemWindows="true"
     tools:context=".EventsOverviewActivity">
 
-    <!-- Header text for the events list -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:title="Upcoming Events"
+            app:titleTextColor="?attr/colorOnPrimary"
+            app:layout_scrollFlags="scroll|enterAlways" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- ENHANCEMENT: Upcoming Events Summary -->
     <TextView
-        android:id="@+id/textHeader"
+        android:id="@+id/textUpcomingEvents"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:padding="12dp"
+        android:background="@drawable/rounded_background"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="14sp"
+        android:visibility="gone"
+        android:contentDescription="Summary of upcoming events"
+        android:importantForAccessibility="yes"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+
+    <!-- ENHANCEMENT: Sort Button -->
+    <Button
+        android:id="@+id/buttonSort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Upcoming Events"
-        android:textSize="22sp"
-        android:textStyle="bold"
         android:layout_margin="16dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:text="Sort Events"
+        android:drawableStart="@drawable/ic_sort"
+        android:drawablePadding="8dp"
+        android:contentDescription="Sort events by date, name, or time"
+        android:importantForAccessibility="yes"
+        style="?attr/materialButtonOutlinedStyle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textUpcomingEvents" />
 
-    <!-- RecyclerView for displaying the list of events -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewEvents"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/textHeader"
-        android:paddingBottom="128dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="8dp"
         android:clipToPadding="false"
-        android:padding="8dp" />
+        android:contentDescription="List of upcoming events"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonSort"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineBottom" />
 
-    <!-- Floating action button for adding new events -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="88dp" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/fabMenu"
-        android:layout_alignParentEnd="true"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:contentDescription="Add Event"
-        android:src="@android:drawable/ic_input_add" />
+        android:contentDescription="Add new event"
+        app:srcCompat="@drawable/ic_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/fabMenu" />
 
-    <!-- Floating action button for menu (logout, sms) -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
-        android:contentDescription="Menu"
-        android:src="@drawable/ic_menu_hamburger" />
-</RelativeLayout>
+        android:contentDescription="Open menu for logout and SMS settings"
+        app:srcCompat="@drawable/ic_menu_hamburger"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

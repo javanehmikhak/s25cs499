@@ -1,3 +1,7 @@
+/*
+ * RecyclerView adapter for events list.
+ * Handles event display and user interactions.
+ */
 package com.example.eventtrackerapp_javaneharianamikhak;
 
 import android.view.LayoutInflater;
@@ -12,35 +16,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 /**
- * Manages the data and views for the list of events displayed in a RecyclerView.
- * This adapter is responsible for creating view holders for each event item, binding
- * event data (name and date) to the views, and handling user interactions like
- * clicks on the "Edit" and "Delete" buttons via callback listeners.
+ * RecyclerView adapter for displaying events list.
  */
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
     private List<Event> events;
     private final OnEventDeleteListener deleteListener;
     private final OnEventEditListener editListener;
 
-    /**
-     * Functional interface for handling the deletion of an event.
-     */
     public interface OnEventDeleteListener {
         void onDelete(Event event);
     }
 
-    /**
-     * Functional interface for handling the editing of an event.
-     */
     public interface OnEventEditListener {
         void onEdit(Event event);
     }
 
     /**
-     * Constructs the EventAdapter.
-     * @param events The initial list of events to display.
-     * @param deleteListener The callback listener for delete actions.
-     * @param editListener The callback listener for edit actions.
+     * Create adapter with event list and listeners.
      */
     public EventAdapter(List<Event> events, OnEventDeleteListener deleteListener, OnEventEditListener editListener) {
         this.events = events;
@@ -49,11 +41,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     /**
-     * Called when RecyclerView needs a new ViewHolder of the given type to represent an item.
-     * This new ViewHolder will be used to display items of the adapter using onBindViewHolder.
-     * @param parent The ViewGroup into which the new View will be added after it is bound to an adapter position.
-     * @param viewType The view type of the new View.
-     * @return A new EventViewHolder that holds a View of the given view type.
+     * Create new ViewHolder for RecyclerView.
      */
     @NonNull
     @Override
@@ -64,15 +52,17 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     /**
-     * Called by RecyclerView to display the data at the specified position.
-     * This method updates the contents of the ViewHolder to reflect the item at the given position.
-     * @param holder The ViewHolder which should be updated to represent the contents of the item at the given position.
-     * @param position The position of the item within the adapter's data set.
+     * Bind event data to ViewHolder.
      */
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = events.get(position);
-        holder.eventText.setText(String.format("%s – %s", event.getName(), event.getDate()));
+        String eventDisplay = event.getName() + " – " + event.getDate();
+        if (event.getTime() != null && !event.getTime().isEmpty()) {
+            eventDisplay += " at " + event.getTime();
+        }
+        holder.eventText.setText(eventDisplay);
+        
         holder.deleteButton.setOnClickListener(v -> {
             if (deleteListener != null) {
                 deleteListener.onDelete(event);
@@ -86,8 +76,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     /**
-     * Returns the total number of items in the data set held by the adapter.
-     * @return The total number of items in this adapter.
+     * Get total number of events.
      */
     @Override
     public int getItemCount() {

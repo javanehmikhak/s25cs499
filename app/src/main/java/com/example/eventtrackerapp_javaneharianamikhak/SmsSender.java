@@ -26,7 +26,11 @@ public class SmsSender {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(phoneNumber, null, message, null, null);
             Log.i(TAG, "SMS sent successfully to " + phoneNumber);
-        } catch (Exception e) {
+        } catch (SecurityException e) {
+            Log.e(TAG, "SMS permission denied for " + phoneNumber, e);
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "Invalid phone number format: " + phoneNumber, e);
+        } catch (RuntimeException e) {
             Log.e(TAG, "Failed to send SMS to " + phoneNumber, e);
         }
     }

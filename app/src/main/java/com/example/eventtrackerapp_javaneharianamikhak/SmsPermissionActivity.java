@@ -16,11 +16,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 /**
- * Manages the entire lifecycle of the SMS permission for the application.
- * It provides a user interface to explain why the permission is needed, allows the
- * user to grant the permission, and provides a shortcut to system settings to
- * manage or revoke the permission later. The UI dynamically updates based on the
- * current permission status.
+ * SMS permission management screen.
+ * Handles permission requests and system settings navigation.
  */
 public class SmsPermissionActivity extends AppCompatActivity {
 
@@ -34,30 +31,21 @@ public class SmsPermissionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sms_permission);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("SMS Permissions");
-        }
 
-        // Initialize UI components
+
         explanationText = findViewById(R.id.textSmsExplanation);
         buttonRequest = findViewById(R.id.buttonRequestPermission);
         textPermissionResult = findViewById(R.id.textPermissionResult);
         buttonManage = findViewById(R.id.buttonManagePermission);
         Button buttonDone = findViewById(R.id.buttonDone);
 
-        // Immediately update the UI to reflect the current permission status on load.
         updatePermissionUI();
 
-        // Set up the listener for the "Request Permission" button.
-        // This initiates the standard Android permission request dialog.
         buttonRequest.setOnClickListener(v -> {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.SEND_SMS}, SMS_PERMISSION_CODE);
         });
 
-        // Set up the listener for the "Manage Permission" button.
-        // This opens the app's specific settings page in the Android system settings,
-        // allowing the user to revoke the permission if they choose.
         buttonManage.setOnClickListener(v -> {
             Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
             Uri uri = Uri.fromParts("package", getPackageName(), null);
@@ -65,16 +53,11 @@ public class SmsPermissionActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // The "Done" button simply closes this activity and returns to the previous screen.
         buttonDone.setOnClickListener(v -> finish());
     }
 
     /**
-     * Callback for the result from requesting permissions. This method is invoked for every
-     * call on requestPermissions(android.app.Activity, String[], int).
-     * @param requestCode The request code passed in requestPermissions(...).
-     * @param permissions The requested permissions. Never null.
-     * @param grantResults The grant results for the corresponding permissions.
+     * Handles permission request results.
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -84,6 +67,12 @@ public class SmsPermissionActivity extends AppCompatActivity {
             // After the user responds to the dialog, update the UI to reflect their choice.
             updatePermissionUI();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updatePermissionUI();
     }
 
     /**

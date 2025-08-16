@@ -9,13 +9,28 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.content.Intent;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 
 /**
- * MainActivity serves as the primary entry point for the application, handling user
- * authentication through a login and registration screen. It validates user input and
- * interacts with the DatabaseHelper to verify credentials or create new user accounts.
- * Upon successful authentication, it navigates the user to their event overview screen.
+ * Main authentication screen for EventTrackerApp.
+ * 
+ * This activity serves as the entry point for the application, providing user authentication
+ * functionality including login and registration. It implements a clean separation of concerns
+ * by delegating database operations to DatabaseHelper and validation to ValidationUtils.
+ * 
+ * Features:
+ * - User login with username/password validation
+ * - New user registration with duplicate username prevention
+ * - Real-time input validation with visual feedback
+ * - Secure navigation to EventsOverviewActivity upon successful authentication
+ * 
+ * Architecture: Follows MVVM principles with clear separation between UI and business logic.
+ * Security: Implements proper input validation and error handling for user credentials.
+ * 
+ * @author Ariana Mikhak
+ * @version 1.0
+ * @since 2025
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -25,34 +40,23 @@ public class MainActivity extends AppCompatActivity {
     private TextView textFeedback;
 
     /**
-     * Initializes the activity, sets up the user interface, and wires up event listeners.
-     * This method is called when the activity is first created. It's responsible for
-     * finding UI elements by their ID, setting the title, and defining the behavior
-     * for user interactions like text input and button clicks.
-     * @param savedInstanceState If the activity is being re-initialized after previously
-     *                           being shut down, this Bundle contains the data it most
-     *                           recently supplied in onSaveInstanceState(Bundle).
-     *                           Otherwise, it is null.
+     * Initialize UI and event listeners.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("EventTrackerApp -- JavanehAianaMikhak");
-        }
 
-        // Initialize UI components
+
         usernameText = findViewById(R.id.editTextUsername);
         passwordText = findViewById(R.id.editTextPassword);
         buttonLogin = findViewById(R.id.buttonLogin);
         buttonRegister = findViewById(R.id.buttonRegister);
         textFeedback = findViewById(R.id.textFeedback);
+        
 
-        // A TextWatcher is used to monitor the username and password fields.
-        // It enables the login button only when both fields contain text, preventing
-        // the user from attempting to log in with empty credentials.
+
         TextWatcher loginWatcher = new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -64,36 +68,35 @@ public class MainActivity extends AppCompatActivity {
             @Override public void afterTextChanged(Editable s) {}
         };
 
-        // Attach the watcher to both input fields to monitor them for changes.
         usernameText.addTextChangedListener(loginWatcher);
         passwordText.addTextChangedListener(loginWatcher);
 
-        // Handles the login process when the "LOG IN" button is clicked.
-        // It retrieves the username and password, validates them against the database,
-        // and navigates to the EventsOverviewActivity upon success.
         buttonLogin.setOnClickListener(v -> {
             String username = usernameText.getText().toString().trim();
             String password = passwordText.getText().toString().trim();
 
-            // Ensure fields are not empty before querying the database.
             if (username.isEmpty() || password.isEmpty()) {
                 textFeedback.setText("Please enter both username and password.");
                 return;
             }
 
-            DatabaseHelper db = new DatabaseHelper(this);
-            boolean isValidUser = db.checkUser(username, password);
+            try {
+                DatabaseHelper db = new DatabaseHelper(this);
+                boolean isValidUser = db.checkUser(username, password);
 
-            if (isValidUser) {
-                // If the user is valid, retrieve their ID and pass it to the next activity.
-                int userId = db.getUserId(username);
-                Intent intent = new Intent(MainActivity.this, EventsOverviewActivity.class);
-                intent.putExtra("userId", userId);
-                intent.putExtra("username", username);
-                startActivity(intent);
-            } else {
-                // Provide feedback if credentials do not match.
-                textFeedback.setText("Incorrect credentials.");
+                if (isValidUser) {
+                    int userId = db.getUserId(username);
+                    Intent intent = new Intent(MainActivity.this, EventsOverviewActivity.class);
+                    intent.putExtra("userId", userId);
+                    intent.putExtra("username", username);
+                    startActivity(intent);
+                } else {
+                    textFeedback.setText("Incorrect credentials.");
+                }
+            } catch (IllegalArgumentException e) {
+                textFeedback.setText("Invalid credentials format.");
+            } catch (RuntimeException e) {
+                textFeedback.setText("Database error occurred. Please try again.");
             }
         });
 
@@ -110,21 +113,42 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            DatabaseHelper db = new DatabaseHelper(this);
-            boolean wasUserAdded = db.addUser(username, password);
+            try {
+                DatabaseHelper db = new DatabaseHelper(this);
+                boolean wasUserAdded = db.addUser(username, password);
 
-            if (wasUserAdded) {
-                // On successful registration, immediately log the user in.
-                int userId = db.getUserId(username);
-                textFeedback.setText("Account created for: " + username);
-                Intent intent = new Intent(MainActivity.this, EventsOverviewActivity.class);
-                intent.putExtra("userId", userId);
-                intent.putExtra("username", username);
-                startActivity(intent);
-            } else {
-                // Provide feedback if the username is already taken.
-                textFeedback.setText("Registration failed. Username may already exist.");
+                if (wasUserAdded) {
+                    // On successful registration, immediately log the user in.
+                    int userId = db.getUserId(username);
+                    textFeedback.setText("Account created for: " + username);
+                    Intent intent = new Intent(MainActivity.this, EventsOverviewActivity.class);
+                    intent.putExtra("userId", userId);
+                    intent.putExtra("username", username);
+                    startActivity(intent);
+                } else {
+                    // Provide feedback if the username is already taken.
+                    textFeedback.setText("Registration failed. Username may already exist.");
+                }
+            } catch (IllegalArgumentException e) {
+                textFeedback.setText("Invalid username or password format.");
+            } catch (RuntimeException e) {
+                textFeedback.setText("Database error occurred. Please try again.");
             }
         });
+
+        // Set up accessibility features after all other UI setup is complete
+        setupAccessibility();
+
+
     }
+
+    /**
+     * Sets up basic accessibility features.
+     */
+    private void setupAccessibility() {
+        // Set initial focus to username field for better accessibility flow
+        usernameText.requestFocus();
+    }
+
+
 }

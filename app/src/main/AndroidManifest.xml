@@ -7,6 +7,10 @@
     <!-- Permission required for sending SMS notifications -->
     <uses-permission android:name="android.permission.SEND_SMS" />
 
+    <!-- Permissions required for Gemini AI integration -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <!-- Feature requirement for telephony functionality -->
     <uses-feature
         android:name="android.hardware.telephony"
@@ -22,6 +26,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EventTrackerApp_JavanehArianaMikhak">
+        
+        <!-- ENHANCEMENT: FileProvider for CSV export -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
         
         <!-- Activity for managing user profile (e.g., phone number) -->
         <activity

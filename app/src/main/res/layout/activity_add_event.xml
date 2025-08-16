@@ -1,66 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Add/Edit Event Screen - Material Design 3 Layout -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:padding="24dp"
     tools:context=".AddEventActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textFormHeader"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="32dp"
+        android:contentDescription="Add new event form header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/textInputLayoutEventName" />
 
-        <TextView
-            android:id="@+id/textFormHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="24dp"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutEventName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Event Name"
+        android:layout_marginBottom="8dp"
+        app:startIconDrawable="@drawable/ic_event"
+        app:startIconTint="#666666"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textFormHeader"
+        app:layout_constraintBottom_toTopOf="@+id/textSuggestionCard">
 
-        <!-- Input for event name -->
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextEventName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Event Name"
-            android:layout_marginBottom="16dp"/>
+            android:textSize="16sp"
+            android:contentDescription="Enter the name of your event" />
 
-        <!-- Input for event date with DatePicker -->
-        <EditText
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/textSuggestionCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:visibility="visible"
+        app:cardElevation="1dp"
+        app:cardCornerRadius="8dp"
+        app:cardBackgroundColor="#F5F5F5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEventName"
+        app:layout_constraintBottom_toTopOf="@+id/textInputLayoutEventDate">
+
+        <TextView
+            android:id="@+id/textSuggestionText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="💡 AI suggestions will appear here..."
+            android:textSize="14sp"
+            android:textColor="#666666"
+            android:padding="12dp"
+            android:contentDescription="AI suggestion for event name" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutEventDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Event Date"
+        android:layout_marginBottom="16dp"
+        app:startIconDrawable="@drawable/ic_calendar"
+        app:startIconTint="#666666"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_calendar_today"
+        app:endIconTint="#666666"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textSuggestionCard"
+        app:layout_constraintBottom_toTopOf="@+id/textInputLayoutEventTime">
+
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextEventDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Event Date (Tap to select)"
-            android:layout_marginBottom="16dp"
             android:focusable="false"
-            android:clickable="true" />
+            android:clickable="true"
+            android:contentDescription="Select event date by tapping this field" />
 
-        <!-- Container for action buttons -->
-        <LinearLayout
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutEventTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Event Time (e.g., 2:30 PM) - Optional"
+        android:layout_marginBottom="32dp"
+        app:startIconDrawable="@drawable/ic_clock"
+        app:startIconTint="#666666"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_clock"
+        app:endIconTint="#666666"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEventDate"
+        app:layout_constraintBottom_toTopOf="@+id/buttonContainer">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextEventTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:inputType="text"
+            android:contentDescription="Enter event time or tap icon to use time picker" />
 
-            <Button
-                android:id="@+id/buttonCancel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Cancel"
-                android:layout_marginEnd="8dp"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
-                android:id="@+id/buttonSaveEvent"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Save Event"
-                android:layout_marginStart="8dp"/>
-        </LinearLayout>
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEventDate"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonCancel"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:text="Cancel"
+            android:layout_marginEnd="8dp"
+            app:cornerRadius="8dp"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:contentDescription="Cancel adding event" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonSaveEvent"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:text="Save Event"
+            android:layout_marginStart="8dp"
+            app:cornerRadius="8dp"
+            app:elevation="2dp"
+            android:contentDescription="Save the new event" />
+
     </LinearLayout>
-</RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
