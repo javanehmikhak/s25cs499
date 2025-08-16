@@ -7,11 +7,12 @@ Welcome to my CS‑499 ePortfolio, showcasing my growth as a computer scientist 
 - **Databases**
 
 This repository contains:  
-- Original and enhanced artifacts of my **EventTrackerApp**  
+- Original and enhanced artifacts of my **EventTrackerApp**
 - Enhancement narratives  
 - Professional journals and reflections  
 - Screenshots demonstrating functionality  
 - Code review video (screencast)
+- The code for my project under the branch named `eventtracker-app`
 
 ---
 
