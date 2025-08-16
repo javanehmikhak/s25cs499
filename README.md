@@ -12,7 +12,7 @@ This repository contains:
 - Professional journals and reflections  
 - Screenshots demonstrating functionality  
 - Code review video (screencast)
-- The code for my project under the branch named `eventtracker-app` [link](https://github.com/javanehmikhak/s25cs499/tree/eventtracker-app)
+- The code for my project under the branch named [`eventtracker-app`](https://github.com/javanehmikhak/s25cs499/tree/eventtracker-app)
 
 ---
 
